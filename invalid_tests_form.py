@@ -46,7 +46,7 @@ def fill_form(driver, skip_field=None):
         budget_field.send_keys('50000')
 
     if skip_field is not None:
-        submit_button = driver.find_element(By.CSS_SELECTOR, 'button[type="submit"]')  # Změňte selektor podle skutečného tlačítka
+        submit_button = driver.find_element(By.CSS_SELECTOR, 'button[type="submit"]')  
         submit_button.click()
         time.sleep(5)
 
