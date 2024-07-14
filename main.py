@@ -1,57 +1,53 @@
+import tkinter as tk
+from tkinter import messagebox
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
 import time
 
+def show_result_message(success, failed_test):
+    root = tk.Tk()
+    root.withdraw()
+    if success:
+        messagebox.showinfo("Výsledek testu", "Všechny testy proběhly v pořádku")
+    else:
+        messagebox.showerror("Výsledek testu", f"Test '{failed_test}' neproběhl v pořádku")
+
 driver = webdriver.Safari()
-
-driver.get('https://the-internet.herokuapp.com/')
-
+driver.get("https://www.beskydyweddings.cz")
 time.sleep(3)
 
-try:
-# Test 1: Kliknutí na odkaz "Checkboxes"
-    checkboxes_link = driver.find_element(By.PARTIAL_LINK_TEXT, 'Checkboxes')
+test_success = True
+failed_test = ""
 
-    checkboxes_link.click()
+if test_success:
+    try:
+        portfolio_link = driver.find_element(By.LINK_TEXT, "PORTFOLIO")
+        portfolio_link.click()
+        time.sleep(3)
+    except Exception as e:
+        test_success = False
+        failed_test = "PORTFOLIO"
+        print(f"Došlo k chybě u PORTFOLIO: {e}")
 
-    time.sleep(3)
+if test_success:
+    try:
+        o_mne_link = driver.find_element(By.LINK_TEXT, "O MNĚ")
+        o_mne_link.click()
+        time.sleep(3)
+    except Exception as e:
+        test_success = False
+        failed_test = "O MNĚ"
+        print(f"Došlo k chybě u O MNĚ: {e}")
 
-    current_url = driver.current_url
-
-    expected_url = 'https://the-internet.herokuapp.com/checkboxes'
-    if current_url == expected_url:
-        print("Kliknutím na odkaz 'Checkboxes' jsme se dostali na správnou stránku.")
-    else:
-        print("Kliknutím na odkaz 'Checkboxes' jsme se nedostali na správnou stránku.")
-
-# Test 2: Vyhledávání na stránce
-    search_input = driver.find_element(By.ID, 'search')
-    search_input.send_keys('Internet')
-    search_input.send_keys(Keys.RETURN)
-    time.sleep(3)
-
-    search_results = driver.find_element(By.ID, 'result')
-    search_text = search_results.text
-    expected_text = 'The Internet'
-    if expected_text in search_text:
-        print("Test 2: Výsledek vyhledávání je správný: 'The Internet' bylo nalezeno.")
-    else:
-        print("Test 2: Výsledek vyhledávání není správný.")
-
-# Test 3: Kliknutí na odkaz "Digest Authentication"
-    digest_auth_link = driver.find_element(By.PARTIAL_LINK_TEXT, 'Digest Authentication')
-    digest_auth_link.click()
-    time.sleep(3)
-
-    current_url = driver.current_url
-    expected_url = 'https://the-internet.herokuapp.com/digest_auth'
-    if current_url == expected_url:
-        print("Test 3: Kliknutím na odkaz 'Digest Authentication' jsme se dostali na správnou stránku.")
-    else:
-        print("Test 3: Kliknutím na odkaz 'Digest Authentication' jsme se nedostali na správnou stránku.")
-
-except Exception as e:
-    print("Nastala chyba při provádění testu:", str(e))
+if test_success:
+    try:
+        kontakt_link = driver.find_element(By.LINK_TEXT, "KONTAKT")
+        kontakt_link.click()
+        time.sleep(3)
+    except Exception as e:
+        test_success = False
+        failed_test = "KONTAKT"
+        print(f"Došlo k chybě u KONTAKT: {e}")
 
 driver.quit()
+show_result_message(test_success, failed_test)
